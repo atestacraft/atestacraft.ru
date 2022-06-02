@@ -11,7 +11,58 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id        Int        @id @default(autoincrement())
+  name      String
+  admin     Boolean    @default(false)
+  sessions  Session[]
+  locations Location[]
+}
+
+model Session {
+  id         Int      @id @default(autoincrement())
+  token      String
+  ip_address String
+  logged     Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+enum HeadTags {
+  mob
+  block
+  decor
+  eat
+  other
+}
+
+model Head {
+  id         Int      @id @default(autoincrement())
+  title      String
+  nickname   String
+  tag        HeadTags
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+enum LocationWorld {
+  overworld
+  nether
+  end
+}
+
+model Location {
+  id         Int           @id @default(autoincrement())
+  title      String
+  url        String
+  x          Int
+  y          Int
+  z          Int
+  world      LocationWorld
+  created_at DateTime      @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 }
