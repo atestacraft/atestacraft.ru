@@ -13,6 +13,11 @@ const heads: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void
     getHandler
   )
 
+  fastify.get(
+    '/:nickname',
+    getHandler
+  )
+
   fastify.post(
     '/',
     {
@@ -24,17 +29,17 @@ const heads: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void
   )
 
   fastify.patch(
-    '/',
+    '/:nickname',
     {
       schema: {
-        body: $ref('updateHeadSchema')
+        body: $ref('headSchema')
       }
     },
     patchHandler
   )
 
   fastify.delete(
-    '/:id',
+    '/:nickname',
     {
       schema: {
         params: $ref('deleteHeadSchema')

@@ -10,9 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  name      String
+model Player {
+  nickname  String     @id @unique
   admin     Boolean    @default(false)
   sessions  Session[]
   locations Location[]
@@ -20,14 +19,12 @@ model User {
 
 model Session {
   id         Int      @id @default(autoincrement())
-  token      String
+  code       Int
   ip_address String
-  logged     Boolean  @default(false)
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  player   Player @relation(fields: [nickname], references: [nickname])
+  nickname String
 }
 
 enum HeadTags {
@@ -39,9 +36,8 @@ enum HeadTags {
 }
 
 model Head {
-  id         Int      @id @default(autoincrement())
+  nickname   String   @id @unique
   title      String
-  nickname   String
   tag        HeadTags
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
@@ -56,13 +52,13 @@ enum LocationWorld {
 model Location {
   id         Int           @id @default(autoincrement())
   title      String
-  url        String
+  url        String        @unique
   x          Int
   y          Int
   z          Int
   world      LocationWorld
   created_at DateTime      @default(now())
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  player   Player @relation(fields: [nickname], references: [nickname])
+  nickname String
 }

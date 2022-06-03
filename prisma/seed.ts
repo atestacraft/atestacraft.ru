@@ -1,10 +1,9 @@
 import { PrismaClient } from '@prisma/client'
-import type { User } from '@prisma/client'
+import type { Player } from '@prisma/client'
 
-const users: User[] = [
+const players: Player[] = [
   {
-    id: 1,
-    name: 'crashmax',
+    nickname: 'crashmax',
     admin: true
   }
 ]
@@ -12,9 +11,9 @@ const users: User[] = [
 const prisma = new PrismaClient()
 
 async function main() {
-  for (const user of users) {
-    await prisma.user.create({
-      data: user
+  for (const player of players) {
+    await prisma.player.create({
+      data: player
     })
   }
 }

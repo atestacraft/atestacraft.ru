@@ -1,57 +1,53 @@
 import {
   getHeads,
-  createHead,
-  updateHead,
+  createOrUpdateHead,
   deleteHead
 } from './heads.service.js'
 import type { Head } from '@prisma/client'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 
+type HeadBody = {
+  Body: Omit<Head, 'created_at' | 'updated_at'>
+}
+
+type HeadParams = {
+  Params: {
+    nickname: Head['nickname']
+  }
+}
+
 export async function getHandler(
-  request: FastifyRequest<{ Params: { id: number } }>,
+  request: FastifyRequest<HeadParams>,
   reply: FastifyReply
-): Promise<Head[]> {
-  return await getHeads()
+) {
+  const { nickname } = request.params
+  const heads = await getHeads(nickname ?? {})
+
+  if (heads.length) {
+    return heads
+  }
+
+  return reply.notFound()
 }
 
 export async function postHandler(
-  request: FastifyRequest<{ Body: Head }>,
+  request: FastifyRequest<HeadBody>,
   reply: FastifyReply
 ) {
-  const { id } = request.body
-  const head = await getHeads(id)
-
-  if (head.length) {
-    return reply.badRequest()
-  } else {
-    return await createHead(request.body)
-  }
+  return await createOrUpdateHead(request.body)
 }
 
 export async function patchHandler(
-  request: FastifyRequest<{ Body: Head }>,
+  request: FastifyRequest<HeadParams & HeadBody>,
   reply: FastifyReply
 ) {
-  const { id } = request.body
-  const head = await getHeads(id)
-
-  if (head.length) {
-    return await updateHead(request.body)
-  } else {
-    return reply.notFound()
-  }
+  return await createOrUpdateHead(request.body, request.params.nickname)
 }
 
 export async function deleteHandler(
-  request: FastifyRequest<{ Params: { id: number } }>,
+  request: FastifyRequest<HeadParams>,
   reply: FastifyReply
 ) {
-  const { id } = request.params
-  const head = await getHeads(id)
-
-  if (head.length) {
-    return await deleteHead(id)
-  } else {
-    return reply.notFound()
-  }
+  console.log(request.params.nickname)
+  return await deleteHead(request.params.nickname)
 }

@@ -9,8 +9,8 @@ import { schemas, $ref } from './<%= name %>.schema.js'
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify'
 
 const <%= name %>: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
-  // fastify.get('/', getHandler)
-  // fastify.post('/', postHandler)
+  fastify.get('/', getHandler)
+  fastify.post('/', postHandler)
 
   fastify.addSchemas(schemas)
 }
