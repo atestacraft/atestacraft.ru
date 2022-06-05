@@ -4,7 +4,7 @@ import type { Player } from '@prisma/client'
 const players: Player[] = [
   {
     nickname: 'crashmax',
-    admin: true
+    role: 'op'
   }
 ]
 

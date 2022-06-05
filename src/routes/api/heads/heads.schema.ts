@@ -7,11 +7,14 @@ const headSchema = z.object({
   tag: z.string()
 })
 
+const arrayHeadSchema = z.array(headSchema)
+
 const deleteHeadSchema = z.object({
   nickname: z.string()
 })
 
 export const { schemas, $ref } = buildJsonSchemas({
   headSchema,
+  arrayHeadSchema,
   deleteHeadSchema
 })

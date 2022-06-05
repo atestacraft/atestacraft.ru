@@ -10,9 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PlayerRoles {
+  player
+  op
+}
+
 model Player {
-  nickname  String     @id @unique
-  admin     Boolean    @default(false)
+  nickname  String      @id @unique
+  role      PlayerRoles @default(player)
   sessions  Session[]
   locations Location[]
 }
@@ -40,7 +45,7 @@ model Head {
   title      String
   tag        HeadTags
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 enum LocationWorld {

@@ -1,52 +1,64 @@
 import {
-  deleteHandler,
-  getHandler,
-  patchHandler,
-  postHandler
+  getAllHandsHandler,
+  getHeadHandler,
+  createOrUpdateHeadHandler,
+  deleteHeadHandler
 } from './heads.controller.js'
 import { schemas, $ref } from './heads.schema.js'
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify'
 
 const heads: FastifyPluginAsync = async (fastify: FastifyInstance): Promise<void> => {
-  fastify.get(
-    '/',
-    getHandler
-  )
-
-  fastify.get(
-    '/:nickname',
-    getHandler
-  )
-
-  fastify.post(
-    '/',
-    {
-      schema: {
-        body: $ref('headSchema')
+  fastify.route({
+    url: '/',
+    method: 'GET',
+    schema: {
+      response: {
+        200: $ref('arrayHeadSchema')
       }
     },
-    postHandler
-  )
+    handler: getAllHandsHandler
+  })
 
-  fastify.patch(
-    '/:nickname',
-    {
-      schema: {
-        body: $ref('headSchema')
+  fastify.route({
+    url: '/:nickname',
+    method: 'GET',
+    schema: {
+      response: {
+        200: $ref('headSchema')
       }
     },
-    patchHandler
-  )
+    handler: getHeadHandler
+  })
 
-  fastify.delete(
-    '/:nickname',
-    {
-      schema: {
-        params: $ref('deleteHeadSchema')
-      }
+  fastify.route({
+    url: '/',
+    method: 'POST',
+    schema: {
+      body: $ref('headSchema')
     },
-    deleteHandler
-  )
+    // preHandler: [fastify.authenticate],
+    handler: createOrUpdateHeadHandler
+  })
+
+  fastify.route({
+    url: '/:nickname',
+    method: 'PATCH',
+    schema: {
+      body: $ref('headSchema')
+    },
+    // preHandler: [fastify.authenticate],
+    handler: createOrUpdateHeadHandler
+  })
+
+  fastify.route({
+    url: '/:nickname',
+    method: 'DELETE',
+    schema: {
+      params: $ref('deleteHeadSchema')
+    },
+    // preHandler: [fastify.authenticate],
+    handler: deleteHeadHandler
+  })
 
   fastify.addSchemas(schemas)
 }
